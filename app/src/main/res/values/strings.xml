@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kronos ORM Android Example</string>
+    <string name="library_title">Kronos ORM</string>
+    <string name="library_subtitle">Android Markdown notebook</string>
+    <string name="search_documents">Search documents</string>
+    <string name="filter_all">All</string>
+    <string name="filter_favorites">Starred</string>
+    <string name="no_documents">No documents found</string>
+    <string name="new_document">New document</string>
+    <string name="add_favorite">Add to favorites</string>
+    <string name="remove_favorite">Remove from favorites</string>
+    <string name="storage_status">Kronos ORM 0.2.4 · SQLite · local only</string>
+    <string name="loading_documents">Loading library…</string>
+    <string name="loading_document">Loading document…</string>
+    <string name="saving_document">Saving…</string>
+    <string name="deleting_document">Deleting…</string>
+    <string name="database_error">Database operation failed</string>
+    <string name="document_meta">%1$s · %2$d characters</string>
+    <string name="document_title_hint">Document title</string>
+    <string name="markdown_hint">Write Markdown here…</string>
+    <string name="edit_mode">Edit</string>
+    <string name="preview_mode">Preview</string>
+    <string name="markdown_label">MARKDOWN</string>
+    <string name="format_heading">H1</string>
+    <string name="format_bold">B</string>
+    <string name="format_italic">I</string>
+    <string name="format_bullet">-</string>
+    <string name="format_numbered">1.</string>
+    <string name="format_quote">&gt;</string>
+    <string name="format_code">&lt;&gt;</string>
+    <string name="format_link">[]</string>
+    <string name="back">Back</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="discard">Discard</string>
+    <string name="delete_document">Delete document</string>
+    <string name="delete_document_message">This document will be permanently removed.</string>
+    <string name="unsaved_changes">Unsaved changes</string>
+    <string name="unsaved_changes_message">Save this document before leaving?</string>
+    <string name="untitled_document">Untitled document</string>
+    <string name="empty_preview_markdown">*Nothing here yet.*</string>
+    <string name="saved_status">Saved · %1$d characters</string>
+    <string name="unsaved_status">Unsaved changes · %1$d characters</string>
+    <string name="editor_ready_status">Up to date · %1$d characters</string>
+
+    <plurals name="document_count">
+        <item quantity="one">%1$d document · %2$d starred</item>
+        <item quantity="other">%1$d documents · %2$d starred</item>
+    </plurals>
+</resources>

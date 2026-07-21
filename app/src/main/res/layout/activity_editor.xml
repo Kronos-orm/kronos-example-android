@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/canvas"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="@color/header"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp">
+
+        <ImageButton
+            android:id="@+id/editorBackButton"
+            style="@style/ToolbarIconButton"
+            android:contentDescription="@string/back"
+            android:src="@android:drawable/ic_media_previous" />
+
+        <EditText
+            android:id="@+id/titleInput"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:hint="@string/document_title_hint"
+            android:importantForAutofill="no"
+            android:inputType="textCapSentences"
+            android:maxLines="1"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:selectAllOnFocus="false"
+            android:textColor="@android:color/white"
+            android:textColorHint="@color/header_muted"
+            android:textSize="19sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/editorFavoriteButton"
+            style="@style/ToolbarIconButton"
+            android:contentDescription="@string/add_favorite"
+            android:src="@android:drawable/btn_star_big_off" />
+
+        <ImageButton
+            android:id="@+id/editorDeleteButton"
+            style="@style/ToolbarIconButton"
+            android:contentDescription="@string/delete_document"
+            android:src="@android:drawable/ic_menu_delete" />
+
+        <ImageButton
+            android:id="@+id/editorSaveButton"
+            style="@style/ToolbarIconButton"
+            android:contentDescription="@string/save"
+            android:src="@android:drawable/ic_menu_save" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:background="@drawable/bg_segment_group"
+            android:orientation="horizontal"
+            android:padding="3dp">
+
+            <TextView
+                android:id="@+id/modeEdit"
+                style="@style/SegmentButton"
+                android:text="@string/edit_mode" />
+
+            <TextView
+                android:id="@+id/modePreview"
+                style="@style/SegmentButton"
+                android:text="@string/preview_mode" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:text="@string/markdown_label"
+            android:textColor="@color/accent"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/formatBar"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@color/toolbar_surface"
+        android:fillViewport="false"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp">
+
+            <TextView
+                android:id="@+id/formatHeading"
+                style="@style/FormatButton"
+                android:text="@string/format_heading"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/formatBold"
+                style="@style/FormatButton"
+                android:text="@string/format_bold"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/formatItalic"
+                style="@style/FormatButton"
+                android:text="@string/format_italic"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/formatBullet"
+                style="@style/FormatButton"
+                android:text="@string/format_bullet" />
+
+            <TextView
+                android:id="@+id/formatNumbered"
+                style="@style/FormatButton"
+                android:text="@string/format_numbered" />
+
+            <TextView
+                android:id="@+id/formatQuote"
+                style="@style/FormatButton"
+                android:text="@string/format_quote" />
+
+            <TextView
+                android:id="@+id/formatCode"
+                style="@style/FormatButton"
+                android:fontFamily="monospace"
+                android:text="@string/format_code" />
+
+            <TextView
+                android:id="@+id/formatLink"
+                style="@style/FormatButton"
+                android:text="@string/format_link" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_editor_surface">
+
+        <EditText
+            android:id="@+id/markdownInput"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:fontFamily="monospace"
+            android:gravity="top|start"
+            android:hint="@string/markdown_hint"
+            android:importantForAutofill="no"
+            android:inputType="textMultiLine|textCapSentences|textNoSuggestions"
+            android:lineSpacingExtra="4dp"
+            android:padding="18dp"
+            android:scrollbars="vertical"
+            android:textColor="@color/ink"
+            android:textColorHint="@color/muted"
+            android:textSize="15sp" />
+
+        <ScrollView
+            android:id="@+id/previewScroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/markdownPreview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:padding="20dp"
+                android:textColor="@color/ink"
+                android:textIsSelectable="true"
+                android:textSize="16sp" />
+        </ScrollView>
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/editorStatus"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="@color/muted"
+        android:textSize="11sp" />
+</LinearLayout>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ink">#18211F</color>
+    <color name="body">#46534F</color>
+    <color name="canvas">#F4F6F5</color>
+    <color name="header">#202A28</color>
+    <color name="header_muted">#BAC7C2</color>
+    <color name="accent">#087F72</color>
+    <color name="accent_dark">#075E56</color>
+    <color name="gold">#D29B21</color>
+    <color name="line">#DDE4E1</color>
+    <color name="muted">#6D7B77</color>
+    <color name="segment_track">#E7ECEA</color>
+    <color name="toolbar_surface">#F0F3F2</color>
+</resources>
