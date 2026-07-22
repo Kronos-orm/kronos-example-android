@@ -2,6 +2,7 @@ package com.kotlinorm.example.android
 
 import android.app.Application
 import com.kotlinorm.Kronos
+import com.kotlinorm.KronosLoggerApp
 import com.kotlinorm.orm.ddl.table
 
 class KronosExampleApp : Application() {
@@ -12,7 +13,7 @@ class KronosExampleApp : Application() {
         super.onCreate()
 
         database = AndroidSQLiteDataSourceWrapper(this)
-        Kronos.logPath = emptyList()
+        KronosLoggerApp.detectLoggerImplementation()
         Kronos.dataSource = { database }
 
         database.table.syncTable(MarkdownDocument())

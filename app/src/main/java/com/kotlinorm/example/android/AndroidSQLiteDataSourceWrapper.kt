@@ -1,3 +1,5 @@
+@file:OptIn(com.kotlinorm.annotations.InternalKronosApi::class)
+
 package com.kotlinorm.example.android
 
 import android.content.Context
@@ -8,6 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.database.sqlite.SQLiteProgram
 import com.kotlinorm.Kronos
 import com.kotlinorm.beans.task.KronosAtomicBatchTask
+import com.kotlinorm.beans.task.ResultColumnMetadata
 import com.kotlinorm.beans.task.TransactionScope
 import com.kotlinorm.enums.DBType
 import com.kotlinorm.enums.KOperationType
@@ -16,9 +19,9 @@ import com.kotlinorm.interfaces.KAtomicActionTask
 import com.kotlinorm.interfaces.KAtomicQueryTask
 import com.kotlinorm.interfaces.KPojo
 import com.kotlinorm.interfaces.KronosDataSourceWrapper
-import com.kotlinorm.utils.getTypeSafeValue
+import com.kotlinorm.utils.decodeDatabaseValue
 import kotlin.reflect.KClass
-import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 /**
  * Small Android SQLite adapter for the example app.
@@ -48,7 +51,7 @@ class AndroidSQLiteDataSourceWrapper(context: Context) : KronosDataSourceWrapper
         val rows = mutableListOf<Any?>()
         query(parsed.jdbcSql, parsed.jdbcParamList) { cursor ->
             while (cursor.moveToNext()) {
-                rows += readRow(cursor, task.targetType, task.resultColumnTypes)
+                rows += readRow(cursor, task)
             }
         }
         return rows
@@ -136,46 +139,78 @@ class AndroidSQLiteDataSourceWrapper(context: Context) : KronosDataSourceWrapper
         cursor.use(block)
     }
 
-    private fun readRow(
-        cursor: Cursor,
-        targetType: KType,
-        resultColumnTypes: Map<String, KType>
-    ): Any? {
+    private fun readRow(cursor: Cursor, task: KAtomicQueryTask): Any? {
+        val targetType = task.targetType
         val classifier = targetType.classifier as? KClass<*> ?: return null
         return when {
             classifier == Map::class || classifier == MutableMap::class -> {
+                val valueType = targetType.arguments.getOrNull(1)?.type
+                    ?.takeUnless { (it.classifier as? KClass<*>) == Any::class }
                 linkedMapOf<String, Any?>().apply {
                     for (position in 0 until cursor.columnCount) {
                         val label = cursor.getColumnName(position)
+                        val metadata = task.resultColumns.columnMetadata(label)
+                        val column = when {
+                            valueType != null && metadata != null ->
+                                metadata.copy(type = valueType, columnLabel = label)
+                            valueType != null -> ResultColumnMetadata(valueType, columnLabel = label)
+                            metadata != null -> metadata.withLabel(label)
+                            else -> null
+                        }
                         val value = cursor.valueAt(position)
-                        val type = resultColumnTypes[label]
-                            ?: resultColumnTypes[label.uppercase()]
-                            ?: resultColumnTypes[label.lowercase()]
-                        this[label] = value?.let { type?.convert(it) } ?: value
+                        this[label] = column?.decode(value) ?: value
                     }
                 }
             }
 
             KPojo::class.java.isAssignableFrom(classifier.java) -> {
                 val prototype = Kronos.createKPojo(targetType)
-                val values = linkedMapOf<String, Any?>()
-                for (position in 0 until cursor.columnCount) {
-                    val label = cursor.getColumnName(position)
-                    val field = prototype.__columns.firstOrNull {
-                        it.name.equals(label, ignoreCase = true) ||
-                            it.columnName.equals(label, ignoreCase = true)
-                    } ?: continue
-                    values[field.name] = cursor.valueAt(position)
+                prototype.apply {
+                    for (position in 0 until cursor.columnCount) {
+                        val label = cursor.getColumnName(position)
+                        val field = __columns.firstOrNull {
+                            it.name.equals(label, ignoreCase = true) ||
+                                it.columnName.equals(label, ignoreCase = true)
+                        } ?: continue
+                        val fieldType = field.kType ?: typeOf<Any?>()
+                        val column = task.resultColumns.columnMetadata(label)
+                            ?.copy(type = fieldType, columnLabel = label)
+                            ?: ResultColumnMetadata(fieldType, field, columnLabel = label)
+                        this[field.name] = column.decode(cursor.valueAt(position))
+                    }
                 }
-                prototype.safeFromMapData<KPojo>(values)
             }
 
-            else -> cursor.valueAt(0)?.let { targetType.convert(it) }
+            else -> {
+                val label = cursor.getColumnName(0)
+                val metadata = task.resultColumns.columnMetadata(label) ?: task.resultColumns.values.singleOrNull()
+                val logicalType = if ((targetType.classifier as? KClass<*>) == Any::class && metadata != null) {
+                    metadata.type
+                } else {
+                    targetType
+                }
+                val column = metadata?.copy(type = logicalType, columnLabel = label)
+                    ?: ResultColumnMetadata(logicalType, columnLabel = label)
+                column.decode(cursor.valueAt(0))
+            }
         }
     }
 
-    private fun KType.convert(value: Any): Any =
-        if ((classifier as? KClass<*>) == value::class) value else getTypeSafeValue(this, value)
+    private fun ResultColumnMetadata.decode(value: Any?): Any? =
+        decodeDatabaseValue(value, this, sqlDialect, columnLabel)
+
+    private fun Map<String, ResultColumnMetadata>.columnMetadata(label: String): ResultColumnMetadata? {
+        this[label]?.let { return it }
+        val matches = entries.filter { it.key.equals(label, ignoreCase = true) }
+        return when (matches.size) {
+            0 -> null
+            1 -> matches.single().value
+            else -> error("Ambiguous result column metadata for label '$label'")
+        }
+    }
+
+    private fun ResultColumnMetadata.withLabel(label: String): ResultColumnMetadata =
+        if (columnLabel == label) this else copy(columnLabel = label)
 
     private fun Cursor.valueAt(position: Int): Any? = when (getType(position)) {
         Cursor.FIELD_TYPE_NULL -> null

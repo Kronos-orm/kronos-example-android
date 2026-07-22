@@ -1,8 +1,13 @@
+@file:OptIn(com.kotlinorm.annotations.InternalKronosApi::class)
+
 package com.kotlinorm.example.android
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.kotlinorm.Kronos
+import com.kotlinorm.adapter.AndroidUtilLoggerAdapter
+import com.kotlinorm.beans.logging.KLogMessage
+import com.kotlinorm.enums.KLoggerType
 import com.kotlinorm.orm.ddl.table
 import com.kotlinorm.utils.GeneratedTypeProvider
 import java.util.ServiceLoader
@@ -23,6 +28,10 @@ class AndroidKronosIntegrationTest {
             .applicationContext as KronosExampleApp
         val providers = ServiceLoader.load(GeneratedTypeProvider::class.java).toList()
 
+        assertEquals(KLoggerType.ANDROID_LOGGER, Kronos.loggerType)
+        val logger = Kronos.defaultLogger("KronosAndroidTest")
+        assertTrue(logger is AndroidUtilLoggerAdapter)
+        logger.info(arrayOf(KLogMessage("Kronos Android logger instrumentation probe")))
         assertTrue(providers.any { it.id.startsWith("gradle:") })
         assertEquals(
             MarkdownDocument::class,
