@@ -20,6 +20,8 @@ import com.kotlinorm.interfaces.KAtomicQueryTask
 import com.kotlinorm.interfaces.KPojo
 import com.kotlinorm.interfaces.KronosDataSourceWrapper
 import com.kotlinorm.utils.decodeDatabaseValue
+import java.math.BigDecimal
+import java.math.BigInteger
 import kotlin.reflect.KClass
 import kotlin.reflect.typeOf
 
@@ -226,8 +228,11 @@ class AndroidSQLiteDataSourceWrapper(context: Context) : KronosDataSourceWrapper
             when (value) {
                 null -> bindNull(position)
                 is ByteArray -> bindBlob(position, value)
+                is Byte, is Short, is Int, is Long -> bindLong(position, value.toLong())
                 is Float, is Double -> bindDouble(position, value.toDouble())
-                is Number -> bindLong(position, value.toLong())
+                is BigDecimal -> bindString(position, value.toPlainString())
+                is BigInteger -> bindString(position, value.toString())
+                is Number -> bindString(position, value.toString())
                 is Boolean -> bindLong(position, if (value) 1L else 0L)
                 else -> bindString(position, value.toString())
             }
