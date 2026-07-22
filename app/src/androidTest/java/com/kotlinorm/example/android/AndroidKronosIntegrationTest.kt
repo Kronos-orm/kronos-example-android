@@ -26,6 +26,7 @@ class AndroidKronosIntegrationTest {
         val application = InstrumentationRegistry.getInstrumentation()
             .targetContext
             .applicationContext as KronosExampleApp
+        application.awaitSchemaReady()
         val providers = ServiceLoader.load(GeneratedTypeProvider::class.java).toList()
 
         assertEquals(KLoggerType.ANDROID_LOGGER, Kronos.loggerType)

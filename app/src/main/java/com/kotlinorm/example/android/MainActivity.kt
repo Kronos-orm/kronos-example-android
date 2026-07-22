@@ -137,7 +137,10 @@ class MainActivity : Activity() {
 
     private fun <T> runDatabase(action: () -> T, onSuccess: (T) -> Unit) {
         io.execute {
-            runCatching(action)
+            runCatching {
+                (application as KronosExampleApp).awaitSchemaReady()
+                action()
+            }
                 .onSuccess { value -> main.post { if (!isFinishing) onSuccess(value) } }
                 .onFailure { error ->
                     Log.e(TAG, "Database operation failed", error)
