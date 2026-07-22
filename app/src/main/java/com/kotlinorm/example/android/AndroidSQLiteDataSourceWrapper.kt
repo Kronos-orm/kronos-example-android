@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteCursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.database.sqlite.SQLiteProgram
+import com.kotlinorm.Kronos
 import com.kotlinorm.beans.task.KronosAtomicBatchTask
 import com.kotlinorm.beans.task.TransactionScope
 import com.kotlinorm.enums.DBType
@@ -16,7 +17,6 @@ import com.kotlinorm.interfaces.KAtomicQueryTask
 import com.kotlinorm.interfaces.KPojo
 import com.kotlinorm.interfaces.KronosDataSourceWrapper
 import com.kotlinorm.utils.getTypeSafeValue
-import com.kotlinorm.utils.createInstance
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
@@ -157,9 +157,7 @@ class AndroidSQLiteDataSourceWrapper(context: Context) : KronosDataSourceWrapper
             }
 
             KPojo::class.java.isAssignableFrom(classifier.java) -> {
-                @Suppress("UNCHECKED_CAST")
-                val kClass = classifier as KClass<out KPojo>
-                val prototype = kClass.createInstance()
+                val prototype = Kronos.createKPojo(targetType)
                 val values = linkedMapOf<String, Any?>()
                 for (position in 0 until cursor.columnCount) {
                     val label = cursor.getColumnName(position)

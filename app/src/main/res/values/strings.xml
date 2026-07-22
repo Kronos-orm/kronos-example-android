@@ -10,7 +10,7 @@
     <string name="new_document">New document</string>
     <string name="add_favorite">Add to favorites</string>
     <string name="remove_favorite">Remove from favorites</string>
-    <string name="storage_status">Kronos ORM 0.2.4 · SQLite · local only</string>
+    <string name="storage_status">Kronos ORM 0.3.0 · SQLite · local only</string>
     <string name="loading_documents">Loading library…</string>
     <string name="loading_document">Loading document…</string>
     <string name="saving_document">Saving…</string>

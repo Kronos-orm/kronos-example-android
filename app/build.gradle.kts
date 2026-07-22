@@ -14,6 +14,7 @@ android {
         applicationId = "com.kotlinorm.example.android"
         minSdk = 26
         targetSdk = 35
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         versionCode = 1
         versionName = "1.0"
     }
@@ -37,8 +38,10 @@ kotlin {
 }
 
 dependencies {
-    implementation("com.kotlinorm:kronos-core:0.2.4")
+    implementation("com.kotlinorm:kronos-core:0.3.0")
     implementation("io.noties.markwon:core:4.6.2")
     implementation("io.noties.markwon:ext-strikethrough:4.6.2")
     implementation("io.noties.markwon:ext-tables:4.6.2")
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test:runner:1.6.2")
 }

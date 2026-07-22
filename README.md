@@ -1,6 +1,6 @@
 # Kronos ORM Android Example
 
-This repository demonstrates **Kronos ORM 0.2.4 on Android** through a complete CRUD application. The example uses a Markdown notebook as its business scenario, with Android platform views, SQLite, and Markwon.
+This repository demonstrates **Kronos ORM 0.3.0 on Android** through a complete CRUD application. The example uses a Markdown notebook as its business scenario, with Android platform views, SQLite, and Markwon.
 
 ## Features
 
@@ -14,7 +14,7 @@ This repository demonstrates **Kronos ORM 0.2.4 on Android** through a complete 
 
 ## Kronos usage
 
-`MarkdownDocument` is a `KPojo` model. The application registers it at startup and keeps the SQLite schema synchronized through:
+`MarkdownDocument` is a `KPojo` model. The application keeps the SQLite schema synchronized through:
 
 ```kotlin
 database.table.syncTable(MarkdownDocument())
@@ -27,7 +27,7 @@ database.table.syncTable(MarkdownDocument())
 - `update().set { ... }.by { it.id }.execute()`
 - `delete().by { it.id }.execute()`
 
-Android's `SQLiteDatabase` is connected to Kronos through the included `AndroidSQLiteDataSourceWrapper`. Database work runs on a single background executor.
+Android's `SQLiteDatabase` is connected to Kronos through the included `AndroidSQLiteDataSourceWrapper`. Database work runs on a single background executor. The [Android SQLite guide](https://kotlinorm.com/#/documentation/en/database/android-sqlite) covers the Android/JVM setup, wrapper responsibilities, transactions, and logging.
 
 ## Run
 
@@ -43,6 +43,6 @@ Install the APK on an emulator or device:
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-The sample uses Kotlin `2.4.0`, Android Gradle Plugin `8.13.2`, Kronos `0.2.4`, and Markwon `4.6.2`.
+The sample uses Kotlin `2.4.0`, Android Gradle Plugin `8.13.2`, Kronos `0.3.0`, and Markwon `4.6.2`.
 
-The SQLite adapter supports Android transaction blocks but does not expose JDBC savepoints, isolation levels, or timeouts.
+The SQLite adapter supports Android transaction blocks. The Android SQLite guide describes the available transaction behavior.
