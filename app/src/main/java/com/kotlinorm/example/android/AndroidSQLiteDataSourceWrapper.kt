@@ -68,7 +68,7 @@ class AndroidSQLiteDataSourceWrapper(context: Context) : KronosDataSourceWrapper
             when (task.operationType) {
                 KOperationType.INSERT -> {
                     val generatedId = statement.executeInsert()
-                    if (task.generatedKeyRequest != null && generatedId >= 0) {
+                    if (task.generatedKeyField != null && generatedId >= 0) {
                         task.lastInsertId = generatedId
                     }
                     if (generatedId >= 0) 1 else 0
