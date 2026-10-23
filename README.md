@@ -1,6 +1,6 @@
 # Kronos ORM Android Example
 
-This repository demonstrates **Kronos ORM 0.3.0 on Android** through a complete CRUD application. The example uses a Markdown notebook as its business scenario, with Android platform views, SQLite, and Markwon.
+This repository demonstrates **Kronos ORM 0.4.0 on Android** through a complete CRUD application. The example uses a Markdown notebook as its business scenario, with Android platform views, SQLite, and Markwon.
 
 ## Features
 
@@ -43,6 +43,20 @@ Install the APK on an emulator or device:
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-The sample uses Kotlin `2.4.0`, Android Gradle Plugin `8.13.2`, Kronos `0.3.0`, and Markwon `4.6.2`.
+The sample uses Kotlin `2.4.21`, Android Gradle Plugin `8.13.2`, Kronos `0.4.0`, and Markwon `4.6.2`.
 
 The SQLite adapter supports Android transaction blocks. The Android SQLite guide describes the available transaction behavior.
+
+## Logging
+
+The application initializes the Android logging adapter through `KronosLoggerApp`.
+Console output is enabled by default. The shared logging switch preserves the selected
+adapter and its configuration:
+
+```kotlin
+Kronos.logging.enabled = false
+Kronos.logging.enabled = true
+```
+
+`Kronos.logging.path` configures bundled output destinations; Android Log output is
+controlled by the shared switch and the Android logging adapter.

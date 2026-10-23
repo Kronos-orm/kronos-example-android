@@ -38,8 +38,8 @@ kotlin {
 }
 
 dependencies {
-    implementation("com.kotlinorm:kronos-core:0.3.0")
-    implementation("com.kotlinorm:kronos-logging:0.3.0")
+    implementation("com.kotlinorm:kronos-core:0.4.0")
+    implementation("com.kotlinorm:kronos-logging:0.4.0")
     implementation("io.noties.markwon:core:4.6.2")
     implementation("io.noties.markwon:ext-strikethrough:4.6.2")
     implementation("io.noties.markwon:ext-tables:4.6.2")

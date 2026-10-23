@@ -5,7 +5,6 @@ package com.kotlinorm.example.android
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.kotlinorm.Kronos
-import com.kotlinorm.adapter.AndroidUtilLoggerAdapter
 import com.kotlinorm.beans.logging.KLogMessage
 import com.kotlinorm.beans.task.KronosAtomicActionTask
 import com.kotlinorm.beans.task.KronosAtomicQueryTask
@@ -17,6 +16,8 @@ import java.math.BigDecimal
 import java.math.BigInteger
 import java.util.ServiceLoader
 import kotlin.reflect.typeOf
+import org.junit.Assert.assertArrayEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
@@ -53,9 +54,9 @@ class AndroidKronosIntegrationTest {
         application.awaitSchemaReady()
         val providers = ServiceLoader.load(GeneratedTypeProvider::class.java).toList()
 
-        assertEquals(KLoggerType.ANDROID_LOGGER, Kronos.loggerType)
-        val logger = Kronos.defaultLogger("KronosAndroidTest")
-        assertTrue(logger is AndroidUtilLoggerAdapter)
+        assertEquals(KLoggerType.ANDROID_LOGGER, Kronos.logging.type)
+        val logger = Kronos.logging.logger("KronosAndroidTest")
+        assertTrue(logger.isInfoEnabled())
         logger.info(arrayOf(KLogMessage("Kronos Android logger instrumentation probe")))
         assertTrue(providers.any { it.id.startsWith("gradle:") })
         assertEquals(
@@ -79,6 +80,30 @@ class AndroidKronosIntegrationTest {
 
         application.database.table.dropTable(MarkdownDocument())
         application.database.table.syncTable(MarkdownDocument())
+    }
+
+    @Test
+    fun loggingSwitchPreservesAndroidAdapterAndDatabaseOperations() {
+        val application = InstrumentationRegistry.getInstrumentation()
+            .targetContext.applicationContext as KronosExampleApp
+        application.awaitSchemaReady()
+        val originalEnabled = Kronos.logging.enabled
+        val originalType = Kronos.logging.type
+        val originalPath = Kronos.logging.path
+        val logger = Kronos.logging.logger("KronosLoggingSwitch")
+        try {
+            Kronos.logging.enabled = false
+            assertFalse(logger.isInfoEnabled())
+            logger.info(arrayOf(KLogMessage("suppressed instrumentation probe")))
+            val document = DocumentRepository().create("logging-${System.nanoTime()}", "disabled", false)
+            Kronos.logging.enabled = true
+            assertTrue(logger.isInfoEnabled())
+            assertEquals(originalType, Kronos.logging.type)
+            assertArrayEquals(originalPath, Kronos.logging.path)
+            assertEquals(document.id, DocumentRepository().find(requireNotNull(document.id))?.id)
+        } finally {
+            Kronos.logging.enabled = originalEnabled
+        }
     }
 
     private fun rawContentInsert(title: String, content: Number): KronosAtomicActionTask =
