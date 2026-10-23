@@ -1,6 +1,6 @@
 # Kronos ORM Android 示例
 
-该仓库通过一个完整的 CRUD 应用演示 **Kronos ORM 0.3.0 在 Android 上的使用方式**。示例以 Markdown 笔记本作为业务场景，使用 Android 原生 View、SQLite 和 Markwon 实现。
+该仓库通过一个完整的 CRUD 应用演示 **Kronos ORM 0.4.0 在 Android 上的使用方式**。示例以 Markdown 笔记本作为业务场景，使用 Android 原生 View、SQLite 和 Markwon 实现。
 
 ## 功能
 
@@ -43,6 +43,17 @@ database.table.syncTable(MarkdownDocument())
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-示例使用 Kotlin `2.4.0`、Android Gradle Plugin `8.13.2`、Kronos `0.3.0` 和 Markwon `4.6.2`。
+示例使用 Kotlin `2.4.21`、Android Gradle Plugin `8.13.2`、Kronos `0.4.0` 和 Markwon `4.6.2`。
 
 SQLite 适配器支持 Android 事务块，具体事务行为见 Android SQLite 指南。
+
+## 日志
+
+默认启用控制台输出。通过统一开关关闭日志，重新开启时保留已选择的日志适配器、路径和自定义工厂：
+
+```kotlin
+Kronos.logging.enabled = false
+Kronos.logging.enabled = true
+```
+
+`Kronos.logging.path` 配置内置输出位置，Logcat 输出由总开关和 Android 日志适配器控制。
